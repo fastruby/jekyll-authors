@@ -12,7 +12,6 @@ module Jekyll
         self.process(@name)
         self.read_yaml(File.join(base, '_layouts'), 'author_index.html')
         self.data['author'] = author
-
         author_title_prefix = site.config['author_title_prefix'] || 'Author: '
         self.data['title'] = "#{author_title_prefix}#{author}"
       end
@@ -53,26 +52,26 @@ module Jekyll
       def generate(site)
         if site.layouts.key? 'author_index'
           dir = site.config['author_dir'] || 'authors'
-          site.authors.keys.each do |author|
+          site.config['authors'].keys.each do |author|
             write_author_index(site, File.join(dir, author.gsub(/\s/, "-").gsub(/[^\w-]/, '').downcase), author)
           end
         end
 
         if site.layouts.key? 'author_feed'
           dir = site.config['author_dir'] || 'authors'
-          site.authors.keys.each do |author|
+          site.config['authors'].keys.each do |author|
             write_author_feed(site, File.join(dir, author.gsub(/\s/, "-").gsub(/[^\w-]/, '').downcase), author)
           end
         end
 
         if site.layouts.key? 'author_list'
           dir = site.config['author_dir'] || 'authors'
-          write_author_list(site, dir, site.authors.keys.sort)
+          write_author_list(site, dir, site.config['authors'].keys.sort)
         end
       end
 
       def write_author_index(site, dir, author)
-        index = CategoryIndex.new(site, site.source, dir, author)
+        index = AuthorIndex.new(site, site.source, dir, author)
         index.render(site.layouts, site.site_payload)
         index.write(site.dest)
         site.static_files << index
