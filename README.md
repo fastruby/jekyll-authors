@@ -2,7 +2,7 @@ Jekyll Authors
 ==============
 
 This gem provides a [Jekyll](http://github.com/mojombo/jekyll) generator for
-author pages, author feeds and a author index.
+author pages, author feeds and an author index.
 
 Basic Setup
 -----------
