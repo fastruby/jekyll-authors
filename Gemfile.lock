@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jekyll-authors (0.0.1)
+    jekyll-authors (0.0.3)
       jekyll (>= 0.10.0)
 
 GEM
