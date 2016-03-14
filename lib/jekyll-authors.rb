@@ -2,7 +2,34 @@ require 'jekyll-authors/tags'
 
 module Jekyll
   module Authors
+    module Utils
+
+      # Returns the `display_name` associated with the author. If there isn't
+      # one, it returns the nickname.
+      #
+      # @param author [String]
+      # @return [String]
+      def display_name(author)
+        return unless site.config['authors']
+
+        if site.config['authors'][author]
+          site.config['authors'][author]['display_name']
+        else
+          author
+        end
+      end
+
+      # Returns the `author_title_prefix` or "Author: "
+      #
+      # @return [String]
+      def author_title_prefix
+        site.config['author_title_prefix'] || 'Author: '
+      end
+    end
+
     class AuthorIndex < Page
+      include Jekyll::Authors::Utils
+
       def initialize(site, base, dir, author)
         @site = site
         @base = base
@@ -12,12 +39,13 @@ module Jekyll
         self.process(@name)
         self.read_yaml(File.join(base, '_layouts'), 'author_index.html')
         self.data['author'] = author
-        author_title_prefix = site.config['author_title_prefix'] || 'Author: '
-        self.data['title'] = "#{author_title_prefix}#{author}"
+        self.data['title'] = "#{author_title_prefix}#{display_name(author)}"
       end
     end
 
     class AuthorFeed < Page
+      include Jekyll::Authors::Utils
+
       def initialize(site, base, dir, author)
         @site = site
         @base = base
@@ -27,8 +55,6 @@ module Jekyll
         self.process(@name)
         self.read_yaml(File.join(base, '_layouts'), 'author_feed.xml')
         self.data['author'] = author
-
-        author_title_prefix = site.config['author_title_prefix'] || 'Author: '
         self.data['title'] = "#{author_title_prefix}#{author}"
       end
     end
